@@ -1,7 +1,7 @@
 // packages
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-
+import { Link } from "react-router-dom";
 function Navbar() {
   const [token, setToken] = useState(null);
   const [language, setLanguage] = useState(Cookies.get("lang") || "uz");
@@ -50,12 +50,12 @@ function Navbar() {
             <div className="text-blue-700 font-medium">User</div>
           ) : (
             <div className="flex gap-4">
-              <button className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
+              <Link to="/login" className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
                 Login
-              </button>
-              <button className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
+              </Link>
+              <Link to="/register" className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
                 Register
-              </button>
+              </Link>
             </div>
           )}
         </div>

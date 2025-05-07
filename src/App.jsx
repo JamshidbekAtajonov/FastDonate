@@ -6,13 +6,15 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"; // v6...
 // pages
 import Home from "./pages/Home";
 import Purchase from "./pages/Purchase"
-
+import Login from "./pages/Login"
+import Register from "./pages/Register";
 // layouts
 import RootLayout from "./layouts/RootLayout";
 
 //css
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
 
 function App() {
   const routes = createBrowserRouter([
@@ -29,6 +31,14 @@ function App() {
           path: "purchase",
           element: <Purchase />,
         },
+        {
+          path: "login",
+          element: <Login/>,
+        },
+        {
+          path: "register",
+          element:<Register/>
+        }
         // {
         //   path: "contact",
         //   element: <ContactLayout />,

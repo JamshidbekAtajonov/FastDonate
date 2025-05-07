@@ -1,5 +1,5 @@
 import React from "react";
-
+import Logo from "/logo.png"
 const Footer = () => {
   return (
     <footer className="w-full bg-[#1A1E2E] text-white py-8 px-4">
@@ -7,9 +7,8 @@ const Footer = () => {
         {/* Logo & Description */}
         <div>
           <div className="flex items-center space-x-2">
-            <div className="bg-cyan-400 text-black font-bold rounded-full w-8 h-8 flex items-center justify-center">
-              F
-            </div>
+          <img src={Logo} alt="" style={{ width: '50px', height: 'auto', borderRadius: '10px' }} />
+
             <span className="text-lg font-semibold">FastDonate</span>
           </div>
           <p className="mt-2 text-sm text-gray-300">
