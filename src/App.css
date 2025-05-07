@@ -1,0 +1,10 @@
+/* Fonts */
+@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;800;900&display=swap);
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+.main-container {
+  @apply max-w-[1240px] w-full mx-auto;
+}
