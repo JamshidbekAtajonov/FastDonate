@@ -35,8 +35,8 @@ const Profile = () => {
                 <span>👤</span>
               </div>
               <div className="ml-3">
-                <p className="text-white font-semibold">{userData.username || 'Aspect07'}</p>
-                <p className="text-gray-400 text-sm">{userData.email || 'habibullayevferuz2001@gmail.com'}</p>
+                <p className="text-white font-semibold">{userData.username}</p>
+                <p className="text-gray-400 text-sm">{userData.email}</p>
                 <p className="text-yellow-400 text-sm flex items-center">
                   {userData.balance || '12000'} <span className="ml-1">💰</span>
                 </p>

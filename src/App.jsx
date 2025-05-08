@@ -8,6 +8,10 @@ import Home from "./pages/Home";
 import Purchase from "./pages/Purchase"
 import Login from "./pages/Login"
 import Register from "./pages/Register";
+import Profile from "./pages/Profile"
+import Balance from "./pages/Balance";
+import Settings from "./pages/Settings"
+import History from "./pages/History"
 // layouts
 import RootLayout from "./layouts/RootLayout";
 
@@ -38,6 +42,22 @@ function App() {
         {
           path: "register",
           element:<Register/>
+        },
+        {
+          path:"profile",
+          element:<Profile/>
+        },
+        {
+          path:"balance",
+          element:<Balance/>
+        },
+        {
+          path:"settings",
+          element:<Settings/>
+        },
+        {
+          path:"history",
+          element:<History/>
         }
         // {
         //   path: "contact",
