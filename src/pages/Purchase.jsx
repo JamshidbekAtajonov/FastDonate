@@ -16,7 +16,6 @@ const additionalPackages = [
   { total: "150+15", bonus: 15, price: 820 },
   { total: "50+5", bonus: 5, price: 270 },
 ];
-
 export default function DiamondPackages() {
   const [standardQuantities, setStandardQuantities] = useState(Array(standardPackages.length).fill(0));
   const [additionalQuantities, setAdditionalQuantities] = useState(Array(additionalPackages.length).fill(0));
@@ -29,7 +28,7 @@ export default function DiamondPackages() {
         <div className="bg-gray-800 p-5 md:p-6 rounded-xl md:rounded-2xl shadow-xl md:sticky md:top-6 md:h-fit">
           <div className="flex items-center gap-4 mb-4">
             <img
-              src="path/to/mobile-legends-icon.png" // Replace with the actual path to the icon
+              src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mobile-legends.jpg-eQDkNCPNSOT1CUGKHm1Xf2TnYYWnUx.jpeg'
               alt="Mobile Legends Icon"
               className="w-12 h-12"
             />
@@ -244,7 +243,6 @@ export default function DiamondPackages() {
               <div className="flex justify-between items-start">
                 <div>
                   <div className="text-lg font-bold">Haftalik Propusk</div>
-                  <div className="text-sm text-blue-300">535 🪙</div>
                 </div>
                 {weeklyPassQuantityArray[0] > 0 && (
                   <div className="text-right text-xs text-blue-400">
