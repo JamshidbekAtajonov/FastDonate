@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 const Balance = () => {
-  const userData = JSON.parse(localStorage.getItem('userData')) || {};
+  const userData = JSON.parse(localStorage.getItem("userData")) || {};
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('userData');
-    navigate('/login');
+    localStorage.removeItem("userData");
+    navigate("/login");
   };
 
   return (
@@ -34,10 +34,14 @@ const Balance = () => {
                 <span>👤</span>
               </div>
               <div className="ml-3">
-                <p className="text-white font-semibold">{userData.username || 'Aspect07'}</p>
-                <p className="text-gray-400 text-sm">{userData.email || 'habibullayevferuz2001@gmail.com'}</p>
+                <p className="text-white font-semibold">
+                  {userData.username || "Aspect07"}
+                </p>
+                <p className="text-gray-400 text-sm">
+                  {userData.email || "habibullayevferuz2001@gmail.com"}
+                </p>
                 <p className="text-yellow-400 text-sm flex items-center">
-                  {userData.balance || '12000'} <span className="ml-1">💰</span>
+                  {userData.balance || "12000"} <span className="ml-1">💰</span>
                 </p>
               </div>
             </div>
@@ -67,14 +71,6 @@ const Balance = () => {
                     Xarid tarixi
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/settings"
-                    className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
-                  >
-                    Sozlamalar
-                  </Link>
-                </li>
               </ul>
             </nav>
           </div>
@@ -89,7 +85,9 @@ const Balance = () => {
         <div className="flex-grow p-6">
           <div className="bg-gray-800 p-6 rounded-lg">
             <h2 className="text-xl font-semibold text-white mb-4">Balans</h2>
-            <p className="text-gray-400">Balance details will be displayed here.</p>
+            <p className="text-gray-400">
+              Balance details will be displayed here.
+            </p>
           </div>
         </div>
       </div>

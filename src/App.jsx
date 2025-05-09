@@ -5,20 +5,19 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"; // v6...
 
 // pages
 import Home from "./pages/Home";
-import Purchase from "./pages/Purchase"
-import Login from "./pages/Login"
+import Purchase from "./pages/Purchase";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Profile from "./pages/Profile"
+import Profile from "./pages/Profile";
 import Balance from "./pages/Balance";
-import Settings from "./pages/Settings"
-import History from "./pages/History"
+import Settings from "./pages/Settings";
+import History from "./pages/History";
 // layouts
 import RootLayout from "./layouts/RootLayout";
 
 //css
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 
 function App() {
   const routes = createBrowserRouter([
@@ -37,28 +36,24 @@ function App() {
         },
         {
           path: "login",
-          element: <Login/>,
+          element: <Login />,
         },
         {
           path: "register",
-          element:<Register/>
+          element: <Register />,
         },
         {
-          path:"profile",
-          element:<Profile/>
+          path: "profile",
+          element: <Profile />,
         },
         {
-          path:"balance",
-          element:<Balance/>
+          path: "balance",
+          element: <Balance />,
         },
         {
-          path:"settings",
-          element:<Settings/>
+          path: "history",
+          element: <History />,
         },
-        {
-          path:"history",
-          element:<History/>
-        }
         // {
         //   path: "contact",
         //   element: <ContactLayout />,
