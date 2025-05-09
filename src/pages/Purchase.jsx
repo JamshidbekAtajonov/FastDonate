@@ -336,9 +336,15 @@ export default function DiamondPackages() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm">TOTAL: </span>
                   <span className="text-yellow-300 font-semibold">0 🪙</span>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded-lg transition">
-                    Sotib olish
-                  </button>
+                    <a
+                  href="https://t.me/FastDonate_Admin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded-lg transition"
+                >
+                  Sotib Olish
+                </a>
+                  
                 </div>
               </div>
             </div>

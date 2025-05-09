@@ -14,12 +14,9 @@ const Profile = () => {
     <div className="min-h-screen flex flex-col bg-gray-900">
       <nav className="bg-gray-800 p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <span className="text-green-400 text-2xl">ⓕ</span>
-            <h1 className="text-xl font-semibold text-white">FastDonate</h1>
-          </div>
+          
           <Link
-            to="/home"
+            to="/"
             className="text-green-400 hover:text-green-500 transition-colors"
           >
             Home
@@ -49,7 +46,7 @@ const Profile = () => {
                     to="/profile"
                     className="block py-2 px-4 bg-blue-500 text-white rounded mb-2"
                   >
-                    Shaxsi ma'lumotlar
+                    Shaxsiy ma'lumotlar
                   </Link>
                 </li>
                 <li>

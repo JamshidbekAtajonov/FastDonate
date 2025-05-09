@@ -7,11 +7,21 @@ const Settings = () => {
         return JSON.parse(localStorage.getItem('userData')) || {};
     });
 
+    // Load theme from userData
     useEffect(() => {
         if (userData.settings?.theme) {
             setTheme(userData.settings.theme);
         }
     }, [userData]);
+
+    // Apply theme to <html> tag and save to localStorage
+    useEffect(() => {
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme);
+
+        const updatedUserData = { ...userData, settings: { theme } };
+        localStorage.setItem('userData', JSON.stringify(updatedUserData));
+    }, [theme]);
 
     const handleSave = () => {
         const updatedUserData = { ...userData, settings: { theme } };
@@ -20,14 +30,10 @@ const Settings = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-900">
+        <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors">
             <nav className="bg-gray-800 p-4">
                 <div className="container mx-auto flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-green-400 text-2xl">ⓕ</span>
-                        <h1 className="text-xl font-semibold text-white">FastDonate</h1>
-                    </div>
-                    <Link to="/home" className="text-green-400 hover:text-green-500 transition-colors">
+                    <Link to="/" className="text-green-400 hover:text-green-500 transition-colors">
                         Home
                     </Link>
                 </div>
@@ -52,7 +58,7 @@ const Settings = () => {
                             <ul>
                                 <li>
                                     <Link to="/profile" className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2">
-                                        Shaxsi ma'lumotlar
+                                        Shaxsiy ma'lumotlar
                                     </Link>
                                 </li>
                                 <li>
