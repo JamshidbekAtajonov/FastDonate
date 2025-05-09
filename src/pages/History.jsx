@@ -13,12 +13,9 @@ const History = () => {
     <div className="min-h-screen flex flex-col bg-gray-900">
       <nav className="bg-gray-800 p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <span className="text-green-400 text-2xl">ⓕ</span>
-            <h1 className="text-xl font-semibold text-white">FastDonate</h1>
-          </div>
+          
           <Link
-            to="/home"
+            to="/"
             className="text-green-400 hover:text-green-500 transition-colors"
           >
             Home
@@ -52,7 +49,7 @@ const History = () => {
                     to="/profile"
                     className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
                   >
-                    Shaxsi ma'lumotlar
+                    Shaxsiy ma'lumotlar
                   </Link>
                 </li>
                 <li>
@@ -84,12 +81,17 @@ const History = () => {
 
         <div className="flex-grow p-6">
           <div className="bg-gray-800 p-6 rounded-lg">
+<<<<<<< HEAD
             <h2 className="text-xl font-semibold text-white mb-4">
               Xarid tarixi
             </h2>
             <p className="text-gray-400">
               Purchase history will be displayed here.
             </p>
+=======
+            <h2 className="text-xl font-semibold text-white mb-4">Xarid tarixi</h2>
+            <p className="text-gray-400">Hozircha hech qanday ma'lumot yo'q!</p>
+>>>>>>> 458d70a422f95fd6cded8435c8a4171f2505e080
           </div>
         </div>
       </div>
