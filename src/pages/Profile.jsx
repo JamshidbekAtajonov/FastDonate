@@ -1,116 +1,134 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 const Profile = () => {
-  const userData = JSON.parse(localStorage.getItem("userData")) || {};
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
-    navigate("/login");
+    Cookies.remove("token");
+    location.href = "/login";
   };
 
+  useEffect(() => {
+    const token1 = Cookies.get("token");
+
+    async function getData() {
+      if (token1) {
+        await axios
+          .get("/auth/me", {
+            headers: {
+              Authorization: `${token1}`,
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            setUserData(res.data);
+          })
+          .catch((err) => {
+            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+          });
+      }
+    }
+
+    getData();
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900">
-      <nav className="bg-gray-800 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          
-          <Link
-            to="/"
-            className="text-green-400 hover:text-green-500 transition-colors"
-          >
-            Home
-          </Link>
-        </div>
-      </nav>
-
-      <div className="flex-grow flex">
-        <div className="w-64 bg-gray-800 p-6 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white text-xl">
-                <span>👤</span>
+    <>
+      {userData ? (
+        <div className="min-h-screen flex flex-col bg-gray-900">
+          <div className="flex-grow flex">
+            <div className="w-64 bg-gray-800 p-6 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white text-xl">
+                    <span>👤</span>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-white font-semibold">
+                      {userData.username}
+                    </p>
+                    <p className="text-gray-400 text-sm">{userData.email}</p>
+                    <p className="text-yellow-400 text-sm flex items-center">
+                      {userData.balance} <span className="ml-1">💰</span>
+                    </p>
+                  </div>
+                </div>
+                <nav>
+                  <ul>
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="block py-2 px-4 bg-blue-500 text-white rounded mb-2"
+                      >
+                        Shaxsiy ma'lumotlar
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/balance"
+                        className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
+                      >
+                        Balans
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/history"
+                        className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
+                      >
+                        Xarid tarixi
+                      </Link>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-              <div className="ml-3">
-                <p className="text-white font-semibold">{userData.username}</p>
-                <p className="text-gray-400 text-sm">{userData.email}</p>
-                <p className="text-yellow-400 text-sm flex items-center">
-                  {userData.balance || "12000"} <span className="ml-1">💰</span>
-                </p>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="text-red-500 hover:text-red-400 transition-colors flex items-center"
+              >
+                <span className="mr-2">⏎</span> Chiqish
+              </button>
             </div>
-            <nav>
-              <ul>
-                <li>
-                  <Link
-                    to="/profile"
-                    className="block py-2 px-4 bg-blue-500 text-white rounded mb-2"
-                  >
-                    Shaxsiy ma'lumotlar
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/balance"
-                    className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
-                  >
-                    Balans
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/history"
-                    className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
-                  >
-                    Xarid tarixi
-                  </Link>
-                </li>
-                {/* <li>
-                  <Link
-                    to="/settings"
-                    className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
-                  >
-                    Sozlamalar
-                  </Link>
-                </li> */}
-              </ul>
-            </nav>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="text-red-500 hover:text-red-400 transition-colors flex items-center"
-          >
-            <span className="mr-2">⏎</span> Chiqish
-          </button>
-        </div>
 
-        <div className="flex-grow p-6">
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-white mb-4">
-              Shaxsi ma'lumotlar
-            </h2>
-            <div className="text-gray-400 space-y-4">
-              <div>
-                <p className="text-sm">Foydalanuvchi nomi</p>
-                <p className="text-white">{userData.username || "Aspect07"}</p>
-              </div>
-              <div>
-                <p className="text-sm">Elektron pochta</p>
-                <p className="text-white">
-                  {userData.email || "habibullayevferuz2001@gmail.com"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm">Balans</p>
-                <p className="text-yellow-400 flex items-center">
-                  {userData.balance || "12000"} <span className="ml-1">💰</span>
-                </p>
+            <div className="flex-grow px-6">
+              <div className="bg-gray-800 p-6 rounded-lg">
+                <h2 className="text-xl font-semibold text-white mb-4">
+                  Shaxsi ma'lumotlar
+                </h2>
+                <div className="text-gray-400 space-y-4">
+                  <div>
+                    <p className="text-sm">Foydalanuvchi nomi</p>
+                    <p className="text-white">
+                      {userData.username || "Aspect07"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm">Elektron pochta</p>
+                    <p className="text-white">
+                      {userData.email || "habibullayevferuz2001@gmail.com"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm">Balans</p>
+                    <p className="text-yellow-400 flex items-center">
+                      {userData.balance || "12000"}{" "}
+                      <span className="ml-1">💰</span>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        <ClipLoader />
+      )}
+    </>
   );
 };
 

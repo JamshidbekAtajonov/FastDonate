@@ -1,19 +1,61 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
+import BASE_URL from "../config";
+
 const History = () => {
-  const userData = JSON.parse(localStorage.getItem("userData")) || {};
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+  const [history, setHistory] = useState(null);
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
-    navigate("/login");
+    Cookies.remove("token");
+    location.href = "/login";
   };
 
-  return (
+  useEffect(() => {
+    const token1 = Cookies.get("token");
+
+    async function getData() {
+      if (token1) {
+        await axios
+          .get("/auth/me", {
+            headers: {
+              Authorization: `${token1}`,
+            },
+          })
+          .then((res) => {
+            setUserData(res.data);
+          })
+          .catch((err) => {
+            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+          });
+
+        await axios
+          .get(`${BASE_URL}/profile/orders`, {
+            headers: {
+              Authorization: `${token1}`,
+            },
+          })
+          .then((res) => {
+            setHistory(res.data.orders);
+          })
+          .catch((err) => {
+            toast.error(
+              "Qandaydir xatolik yuz berdi, sahifani yangilab ko'ring"
+            );
+          });
+      }
+    }
+
+    getData();
+  }, []);
+
+  return userData ? (
     <div className="min-h-screen flex flex-col bg-gray-900">
-      <nav className="bg-gray-800 p-4">
+      {/* <nav className="bg-gray-800 p-4">
         <div className="container mx-auto flex justify-between items-center">
-          
           <Link
             to="/"
             className="text-green-400 hover:text-green-500 transition-colors"
@@ -21,7 +63,7 @@ const History = () => {
             Home
           </Link>
         </div>
-      </nav>
+      </nav> */}
 
       <div className="flex-grow flex">
         <div className="w-64 bg-gray-800 p-6 flex flex-col justify-between">
@@ -38,7 +80,8 @@ const History = () => {
                   {userData.email || "habibullayevferuz2001@gmail.com"}
                 </p>
                 <p className="text-yellow-400 text-sm flex items-center">
-                  {userData.balance || "12000"} <span className="ml-1">💰</span>
+                  {console.log(userData)}
+                  {userData.balance} <span className="ml-1">💰</span>
                 </p>
               </div>
             </div>
@@ -79,23 +122,49 @@ const History = () => {
           </button>
         </div>
 
-        <div className="flex-grow p-6">
+        <div className="flex-grow px-6">
           <div className="bg-gray-800 p-6 rounded-lg">
-<<<<<<< HEAD
             <h2 className="text-xl font-semibold text-white mb-4">
               Xarid tarixi
             </h2>
-            <p className="text-gray-400">
-              Purchase history will be displayed here.
-            </p>
-=======
-            <h2 className="text-xl font-semibold text-white mb-4">Xarid tarixi</h2>
-            <p className="text-gray-400">Hozircha hech qanday ma'lumot yo'q!</p>
->>>>>>> 458d70a422f95fd6cded8435c8a4171f2505e080
+            {history &&
+              (history.length == 0 ? (
+                <p className="text-gray-400">
+                  Hozircha hech qanday ma'lumot yo'q!
+                </p>
+              ) : (
+                history.map((item, index) => {
+                  console.log(item);
+                  return (
+                    <div
+                      key={index}
+                      className="bg-gray-700 p-4 rounded-lg mb-4"
+                    >
+                      <p className="text-white font-semibold">
+                        Buyurtma ID: {item.id}
+                      </p>
+                      <p className="text-gray-400">
+                        Sana: {new Date(item.created_at).toLocaleDateString()}
+                      </p>
+                      <p className="text-gray-400">Olmoslar: {item.diamonds}</p>
+                      <p className="text-gray-400">
+                        Holati:{" "}
+                        {item.status == 0 ? "Bajarilmagan" : "Bajarilgan"}
+                      </p>
+                      <p className="text-gray-400">
+                        Server ID: {item.server_id}
+                      </p>
+                      <p className="text-gray-400">User ID: {item.user_id}</p>
+                    </div>
+                  );
+                })
+              ))}
           </div>
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

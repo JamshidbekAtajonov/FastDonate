@@ -1,28 +1,65 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
+import BASE_URL from "../config.js";
+
 const Balance = () => {
-  const userData = JSON.parse(localStorage.getItem("userData")) || {};
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+  const [prices, setPrices] = useState({});
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
-    navigate("/login");
+    Cookies.remove("token");
+    location.href = "/login";
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-900">
-      <nav className="bg-gray-800 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          
-          <Link
-            to="/"
-            className="text-green-400 hover:text-green-500 transition-colors"
-          >
-            Home
-          </Link>
-        </div>
-      </nav>
+  useEffect(() => {
+    const token1 = Cookies.get("token");
 
+    async function getData() {
+      if (token1) {
+        await axios
+          .get("/auth/me", {
+            headers: {
+              Authorization: `${token1}`,
+            },
+          })
+          .then((res) => {
+            setUserData(res.data);
+          })
+          .catch((err) => {
+            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+          });
+
+        await axios
+          .get(`${BASE_URL}/merchant/orders`, {
+            headers: {
+              Authorization: `${token1}`,
+            },
+          })
+          .then((res) => {})
+          .catch((err) => {
+            toast.error(
+              "Qandaydir xatolik yuz berdi, sahifani yangilab ko'ring"
+            );
+          });
+      }
+
+      await axios
+        .get(`${BASE_URL}/topup`)
+        .then((res) => {
+          setPrices(res.data[0]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    getData();
+  }, []);
+
+  return userData ? (
+    <div className="min-h-screen flex flex-col bg-gray-900">
       <div className="flex-grow flex">
         <div className="w-64 bg-gray-800 p-6 flex flex-col justify-between">
           <div>
@@ -38,7 +75,7 @@ const Balance = () => {
                   {userData.email || "habibullayevferuz2001@gmail.com"}
                 </p>
                 <p className="text-yellow-400 text-sm flex items-center">
-                  {userData.balance || "12000"} <span className="ml-1">💰</span>
+                  {userData.balance} <span className="ml-1">💰</span>
                 </p>
               </div>
             </div>
@@ -79,20 +116,41 @@ const Balance = () => {
           </button>
         </div>
 
-        <div className="flex-grow p-6">
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold text-white mb-4">Balans</h2>
-<<<<<<< HEAD
-            <p className="text-gray-400">
-              Balance details will be displayed here.
-            </p>
-=======
-            <p className="text-gray-400">Hozircha hech qanday ma'lumot yo'q!</p>
->>>>>>> 458d70a422f95fd6cded8435c8a4171f2505e080
+        <div className="flex-grow px-6">
+          <div className="bg-gray-800 p-6 rounded-lg flex flex-col gap-[15px]">
+            {prices &&
+              Object.keys(prices).map((price, idx) => {
+                return (
+                  <a
+                    key={idx}
+                    href="https://t.me/FastDonate_Admin"
+                    target="_blank"
+                    className="rounded-[15px] transition hover:text-black hover:bg-white items-center cursor-pointer  flex gap-[10px]"
+                    style={{
+                      border: "1px solid white",
+                      padding: "10px",
+                    }}
+                  >
+                    <p className="flex gap-[5px] items-center">
+                      <img src="/coin.png" width={30} height={30} alt="" />{" "}
+                      {price}
+                    </p>{" "}
+                    <span>=</span>
+                    {prices[price]}
+                  </a>
+                );
+              })}
+            <p className="rounded-[15px] transition  items-center cursor-pointer  flex gap-[10px]">
+              Sizning balansingiz:{" "}
+              <img src="/coin.png" width={30} height={30} alt="" />{" "}
+              {userData.balance}
+            </p>{" "}
           </div>
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

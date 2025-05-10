@@ -1,18 +1,44 @@
 // packages
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 function Navbar() {
   const [token, setToken] = useState(null);
   const [language, setLanguage] = useState(Cookies.get("lang") || "uz");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setToken(Cookies.get("token"));
+    const token1 = Cookies.get("token");
+
+    setToken(token1);
+
+    async function getData() {
+      if (token1) {
+        await axios
+          .get("/auth/me", {
+            headers: {
+              Authorization: `${token1}`,
+            },
+          })
+          .then((res) => {
+            setUser(res.data);
+          })
+          .catch((err) => {
+            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+          });
+      }
+    }
+
+    getData();
   }, []);
 
   useEffect(() => {
-    // Update the cookie whenever the language state changes
     Cookies.set("lang", language);
   }, [language]);
 
@@ -25,7 +51,10 @@ function Navbar() {
   return (
     <nav className="fixed top-0 left-0 w-full backdrop-blur-sm py-5 z-50 ">
       <div className="main-container mx-auto flex justify-between items-center px-4 md:px-8">
-        <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => (location.href = "/")}
+        >
           <img src="/logo.png" width={50} height={50} alt="FastDonate Logo" />
           <p className="font-bold text-xl md:text-2xl">FastDonate</p>
         </div>
@@ -47,13 +76,24 @@ function Navbar() {
           </div>
 
           {token ? (
-            <div className="text-blue-700 font-medium">User</div>
+            <div
+              className="text-blue-700 font-medium cursor-pointer"
+              onClick={() => navigate("/profile")}
+            >
+              {user && user.username}
+            </div>
           ) : (
             <div className="flex gap-4">
-              <Link to="/login" className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
+              <Link
+                to="/login"
+                className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded"
+              >
                 Login
               </Link>
-              <Link to="/register" className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
+              <Link
+                to="/register"
+                className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded"
+              >
                 Register
               </Link>
             </div>
@@ -112,7 +152,12 @@ function Navbar() {
 
             <div className="flex justify-between">
               {token ? (
-                <div className="text-blue-700 font-medium mt-2">User</div>
+                <div
+                  className="text-blue-700 font-medium mt-2 cursor-pointer"
+                  onClick={() => navigate("/profile")}
+                >
+                  {user && user.username}
+                </div>
               ) : (
                 <div className="flex gap-2 w-full mt-2">
                   <button className="w-full text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">

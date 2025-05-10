@@ -2,6 +2,7 @@ import "./App.css";
 
 // react-router-dom
 import { RouterProvider, createBrowserRouter } from "react-router-dom"; // v6...
+import { ToastContainer } from "react-toastify";
 
 // pages
 import Home from "./pages/Home";
@@ -31,7 +32,7 @@ function App() {
           element: <Home />,
         },
         {
-          path: "purchase",
+          path: "mobile-legends",
           element: <Purchase />,
         },
         {
@@ -89,6 +90,7 @@ function App() {
   return (
     <div className="App">
       <RouterProvider router={routes} />
+      <ToastContainer />
     </div>
   );
 }

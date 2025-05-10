@@ -1,14 +1,14 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 function RootLayout() {
   return (
     <>
       <Navbar />
-      <main className="mt-[150px]">
+      <main className="mt-[100px]">
         <Outlet />
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 }

@@ -1,28 +1,62 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Logo from "/logo.png"
-const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import Logo from "/logo.png";
+import axios from "axios";
+import BASE_URL from "../config.js";
+import Cookies from "js-cookie";
 
-  const handleSubmit = (e) => {
+const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [inputError, setInputError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate registration (replace with actual registration logic)
-    const userData = { username, email, settings: { theme: 'dark' } };
-    localStorage.setItem('userData', JSON.stringify(userData));
-    navigate('/profile');
+    const userData = { username, email, password };
+
+    if (/^[a-zA-Z0-9]+$/.test(username) && password.length > 8) {
+      await axios
+        .post(`${BASE_URL}/auth/register`, userData)
+        .then((response) => {
+          setInputError("");
+          Cookies.set("token", response.data.token);
+          location.href = "/";
+        })
+        .catch((err) => {
+          if (err.response.data) {
+            if (
+              err.response.data.detail === "email or username already exists"
+            ) {
+              setInputError("Username yoki email allaqachon mavjud");
+            }
+          }
+        });
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+    } else {
+      setInputError(
+        "Username faqatgina harf va raqamlardan iborat bo'lishi kerak. Parol esa 8 ta belgidan kam bo'lmasligi kerak."
+      );
+    }
+
+    // navigate("/profile");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="my-[50px] flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <div className="flex items-center justify-center mb-6 gap-2">
-          <img src={Logo} alt="" style={{ width: '50px', height: 'auto', borderRadius: '10px' }} />
+          <img
+            src={Logo}
+            alt=""
+            style={{ width: "50px", height: "auto", borderRadius: "10px" }}
+          />
           <h1 className="text-2xl font-semibold text-white">FastDonate</h1>
         </div>
-        <h2 className="text-xl font-semibold text-white mb-6 text-center">Register</h2>
+        <h2 className="text-xl font-semibold text-white mb-6 text-center">
+          Register
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-400 mb-2" htmlFor="username">
@@ -72,9 +106,10 @@ const Register = () => {
           >
             Register
           </button>
+          <p className="text-red-600 mt-[8px]">{inputError}</p>
         </form>
         <p className="text-gray-400 text-center mt-4">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-green-400 hover:underline">
             Login
           </Link>
