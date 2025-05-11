@@ -4,10 +4,12 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { toast } from "react-toastify";
 import BASE_URL from "../config";
+import { useTranslation } from "react-i18next";
 
 const History = () => {
   const [userData, setUserData] = useState(null);
   const [history, setHistory] = useState(null);
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -29,7 +31,7 @@ const History = () => {
             setUserData(res.data);
           })
           .catch((err) => {
-            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+            toast.error(t("error_fetching_user_data"));
           });
 
         await axios
@@ -42,9 +44,7 @@ const History = () => {
             setHistory(res.data.orders);
           })
           .catch((err) => {
-            toast.error(
-              "Qandaydir xatolik yuz berdi, sahifani yangilab ko'ring"
-            );
+            toast.error(t("error_fetching_orders"));
           });
       }
     }
@@ -54,17 +54,6 @@ const History = () => {
 
   return userData ? (
     <div className="min-h-screen flex flex-col bg-gray-900">
-      {/* <nav className="bg-gray-800 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link
-            to="/"
-            className="text-green-400 hover:text-green-500 transition-colors"
-          >
-            Home
-          </Link>
-        </div>
-      </nav> */}
-
       <div className="flex-grow flex">
         <div className="w-64 bg-gray-800 p-6 flex flex-col justify-between">
           <div>
@@ -74,13 +63,12 @@ const History = () => {
               </div>
               <div className="ml-3">
                 <p className="text-white font-semibold">
-                  {userData.username || "Aspect07"}
+                  {userData.username || t("default_username")}
                 </p>
                 <p className="text-gray-400 text-sm">
-                  {userData.email || "habibullayevferuz2001@gmail.com"}
+                  {userData.email || t("default_email")}
                 </p>
                 <p className="text-yellow-400 text-sm flex items-center">
-                  {console.log(userData)}
                   {userData.balance} <span className="ml-1">💰</span>
                 </p>
               </div>
@@ -92,7 +80,7 @@ const History = () => {
                     to="/profile"
                     className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
                   >
-                    Shaxsiy ma'lumotlar
+                    {t("personal_info")}
                   </Link>
                 </li>
                 <li>
@@ -100,7 +88,7 @@ const History = () => {
                     to="/balance"
                     className="block py-2 px-4 text-gray-400 hover:bg-gray-700 rounded mb-2"
                   >
-                    Balans
+                    {t("balance")}
                   </Link>
                 </li>
                 <li>
@@ -108,7 +96,7 @@ const History = () => {
                     to="/history"
                     className="block py-2 px-4 bg-blue-500 text-white rounded mb-2"
                   >
-                    Xarid tarixi
+                    {t("purchase_history")}
                   </Link>
                 </li>
               </ul>
@@ -118,43 +106,45 @@ const History = () => {
             onClick={handleLogout}
             className="text-red-500 hover:text-red-400 transition-colors flex items-center"
           >
-            <span className="mr-2">⏎</span> Chiqish
+            <span className="mr-2">⏎</span> {t("logout")}
           </button>
         </div>
 
         <div className="flex-grow px-6">
           <div className="bg-gray-800 p-6 rounded-lg">
             <h2 className="text-xl font-semibold text-white mb-4">
-              Xarid tarixi
+              {t("purchase_history")}
             </h2>
             {history &&
               (history.length == 0 ? (
-                <p className="text-gray-400">
-                  Hozircha hech qanday ma'lumot yo'q!
-                </p>
+                <p className="text-gray-400">{t("no_data_available")}</p>
               ) : (
                 history.map((item, index) => {
-                  console.log(item);
                   return (
                     <div
                       key={index}
                       className="bg-gray-700 p-4 rounded-lg mb-4"
                     >
                       <p className="text-white font-semibold">
-                        Buyurtma ID: {item.id}
+                        {t("order_id")}: {item.id}
                       </p>
                       <p className="text-gray-400">
-                        Sana: {new Date(item.created_at).toLocaleDateString()}
-                      </p>
-                      <p className="text-gray-400">Olmoslar: {item.diamonds}</p>
-                      <p className="text-gray-400">
-                        Holati:{" "}
-                        {item.status == 0 ? "Bajarilmagan" : "Bajarilgan"}
+                        {t("date")}:{" "}
+                        {new Date(item.created_at).toLocaleDateString()}
                       </p>
                       <p className="text-gray-400">
-                        Server ID: {item.server_id}
+                        {t("diamonds")}: {item.diamonds}
                       </p>
-                      <p className="text-gray-400">User ID: {item.user_id}</p>
+                      <p className="text-gray-400">
+                        {t("status")}:{" "}
+                        {item.status == 0 ? t("not_completed") : t("completed")}
+                      </p>
+                      <p className="text-gray-400">
+                        {t("server_id")}: {item.server_id}
+                      </p>
+                      <p className="text-gray-400">
+                        {t("user_id")}: {item.user_id}
+                      </p>
                     </div>
                   );
                 })

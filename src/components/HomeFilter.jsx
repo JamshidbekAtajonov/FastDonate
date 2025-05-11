@@ -8,6 +8,7 @@ import {
   Star,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // Sample data for games
 const games = [
@@ -48,6 +49,7 @@ const applications = [
 ];
 
 export default function MobileLegends() {
+  const { t } = useTranslation();
   // State to track active tab
   const [activeTab, setActiveTab] = useState("games"); // "games" or "apps"
   const navigate = useNavigate();
@@ -66,7 +68,7 @@ export default function MobileLegends() {
             onClick={() => setActiveTab("games")}
           >
             <GameController className="w-5 h-5" />
-            <span>O&apos;yinlar</span>
+            <span>{t("gamesTab")}</span>
           </button>
           <button
             className={`flex items-center gap-2 px-4 py-3 ${
@@ -77,7 +79,7 @@ export default function MobileLegends() {
             onClick={() => setActiveTab("apps")}
           >
             <FileText className="w-5 h-5" />
-            <span>Dasturlar</span>
+            <span>{t("appsTab")}</span>
           </button>
         </div>
 
@@ -157,7 +159,7 @@ export default function MobileLegends() {
                   </div>
 
                   <button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md transition-colors">
-                    Download
+                    {t("downloadButton")}
                   </button>
                 </div>
               </div>

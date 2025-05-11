@@ -4,10 +4,11 @@ import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 
 function Navbar() {
+  const { t, i18n } = useTranslation(); // Initialize translation hook
   const [token, setToken] = useState(null);
-  const [language, setLanguage] = useState(Cookies.get("lang") || "uz");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -15,7 +16,6 @@ function Navbar() {
 
   useEffect(() => {
     const token1 = Cookies.get("token");
-
     setToken(token1);
 
     async function getData() {
@@ -30,26 +30,23 @@ function Navbar() {
             setUser(res.data);
           })
           .catch((err) => {
-            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+            toast.error(t("errorFetchingUserData"));
           });
       }
     }
 
     getData();
-  }, []);
+  }, [t]);
 
-  useEffect(() => {
-    Cookies.set("lang", language);
-  }, [language]);
-
-  function handleChangeLanguage(lang) {
-    setLanguage(lang);
-  }
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang); // Change language in i18next
+    localStorage.setItem("lang", lang); // Update localStorage
+  };
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
-    <nav className="fixed top-0 left-0 w-full backdrop-blur-sm py-5 z-50 ">
+    <nav className="fixed top-0 left-0 w-full backdrop-blur-sm py-5 z-50">
       <div className="main-container mx-auto flex justify-between items-center px-4 md:px-8">
         <div
           className="flex items-center gap-3 cursor-pointer"
@@ -61,14 +58,14 @@ function Navbar() {
 
         <div className="hidden md:flex items-center gap-8">
           <div className="flex items-center gap-3">
-            {["en", "ru", "uz"].map((lang, idx) => (
+            {["en", "ru", "uz"].map((lang) => (
               <p
                 key={lang}
                 className={`${
-                  (lang === language || (language === "null" && idx === 2)) &&
+                  lang === i18n.language &&
                   "bg-blue-700 px-[15px] py-[10px] rounded-[8px]"
                 } transition cursor-pointer`}
-                onClick={() => handleChangeLanguage(lang)}
+                onClick={() => changeLanguage(lang)}
               >
                 {lang.toUpperCase()}
               </p>
@@ -88,13 +85,13 @@ function Navbar() {
                 to="/login"
                 className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded"
               >
-                Login
+                {t("login")}
               </Link>
               <Link
                 to="/register"
                 className="text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded"
               >
-                Register
+                {t("register")}
               </Link>
             </div>
           )}
@@ -130,48 +127,6 @@ function Navbar() {
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden mt-4 px-4 pb-4">
-          <div className="flex w-full gap-3">
-            <div className="flex w-full items-center gap-[20px]">
-              {["en", "ru", "uz"].map((lang, idx) => (
-                <p
-                  key={lang}
-                  className={`${
-                    (lang === language || (language === "null" && idx === 2)) &&
-                    "bg-blue-700 px-[15px] py-[10px] rounded-[8px]"
-                  } transition cursor-pointer`}
-                  onClick={() => handleChangeLanguage(lang)}
-                >
-                  {lang.toUpperCase()}
-                </p>
-              ))}
-            </div>
-
-            <div className="flex justify-between">
-              {token ? (
-                <div
-                  className="text-blue-700 font-medium mt-2 cursor-pointer"
-                  onClick={() => navigate("/profile")}
-                >
-                  {user && user.username}
-                </div>
-              ) : (
-                <div className="flex gap-2 w-full mt-2">
-                  <button className="w-full text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
-                    Login
-                  </button>
-                  <button className="w-full text-white bg-blue-700 hover:bg-blue-500 transition px-6 py-2 rounded">
-                    Register
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }

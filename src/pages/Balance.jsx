@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import BASE_URL from "../config.js";
+import { useTranslation } from "react-i18next";
 
 const Balance = () => {
   const [userData, setUserData] = useState(null);
   const [prices, setPrices] = useState({});
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -118,6 +120,7 @@ const Balance = () => {
 
         <div className="flex-grow px-6">
           <div className="bg-gray-800 p-6 rounded-lg flex flex-col gap-[15px]">
+            <h1>{t("balance")}</h1>
             {prices &&
               Object.keys(prices).map((price, idx) => {
                 return (
@@ -141,7 +144,7 @@ const Balance = () => {
                 );
               })}
             <p className="rounded-[15px] transition  items-center cursor-pointer  flex gap-[10px]">
-              Sizning balansingiz:{" "}
+              {t("balance")}:{" "}
               <img src="/coin.png" width={30} height={30} alt="" />{" "}
               {userData.balance}
             </p>{" "}

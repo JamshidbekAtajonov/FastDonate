@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import BASE_URL from "../config.js";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
 
 export default function DiamondPackages() {
   const [standardPackages, setStandardPackages] = useState([]);
@@ -22,6 +23,8 @@ export default function DiamondPackages() {
   );
   const [weeklyPassQuantityArray, setWeeklyPassQuantityArray] = useState([0]);
   const [userBalance, setUserBalance] = useState();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function getData() {
@@ -48,7 +51,7 @@ export default function DiamondPackages() {
           setAdditionalQuantities(Array(additional.length).fill(0));
         })
         .catch((err) => {
-          toast.error("Ma'lumotlarni olishda qandaydir xatolik yuz berdi.");
+          toast.error(t("error_fetching_data"));
         });
 
       const token = Cookies.get("token");
@@ -64,13 +67,13 @@ export default function DiamondPackages() {
             setUserBalance(res.data.balance);
           })
           .catch((err) => {
-            toast.error("Foydalanuvchi ma'lumotlarini olishda xatolik");
+            toast.error(t("error_fetching_user"));
           });
       }
     }
 
     getData();
-  }, []);
+  }, [t]);
 
   async function handleChange(username, serverId) {
     if (username && serverId) {
@@ -82,7 +85,7 @@ export default function DiamondPackages() {
           if (res.data.name) {
             setAccount(res.data.name);
           } else {
-            setAccount("Foydalanuvchi topilmadi");
+            setAccount(t("user_not_found"));
           }
         })
         .catch((err) => {
@@ -94,7 +97,7 @@ export default function DiamondPackages() {
   async function handleBuy() {
     const token = Cookies.get("token");
 
-    if (token && account != "Foydalanuvchi topilmadi" && username && serverId) {
+    if (token && account !== t("user_not_found") && username && serverId) {
       const productsArray = Object.entries(choosedProducts).map(
         ([key, value]) => ({
           id: Number(key),
@@ -116,7 +119,7 @@ export default function DiamondPackages() {
         }
       );
     } else {
-      toast.error("Oldin profilga kiring va to'liq to'ldiring.");
+      toast.error(t("fill_profile_first"));
     }
   }
 
@@ -150,35 +153,25 @@ export default function DiamondPackages() {
               alt="Mobile Legends Icon"
               className="w-12 h-12"
             />
-            <h1 className="text-2xl font-bold">
-              Mobile Legends: Bang Bang Diamonds
-            </h1>
+            <h1 className="text-2xl font-bold">{t("carousel.title")}</h1>
           </div>
           <p className="text-sm mb-4 text-gray-300">
-            Mobile Legends: Bang Bang — bu mobil telefonlar uchun mo'ljallangan
-            ko'p o'yinchili onlayn jang maydoni (MOBA) o'yini. O'yin bepul,
-            monetizatsiya faqat o'yindagi xaridlar, masalan, skinlar va
-            qahramonlar orqali amalga oshiriladi.
-          </p>
-          <p className="text-sm mb-4 text-gray-300">
-            Mobile Legends olmoslarini xarid qiling va o'yin ichidagi noyob
-            imkoniyatlardan foydalaning! Bizning xizmatimiz orqali olmoslarni
-            xavfsiz va tez xarid qilishingiz mumkin.
+            {t("carousel.description")}
           </p>
           <div className="bg-gray-700 p-3 rounded-lg mb-4">
             <p className="text-sm font-semibold text-green-400">
-              Barcha mintaqalarda sotib olish
+              {t("purchase_diamonds")}
             </p>
-            <p className="text-xs text-gray-400">Tezkor yetkazib berish.</p>
+            <p className="text-xs text-gray-400">{t("fast_delivery")}</p>
           </div>
           <ul className="text-sm space-y-2 mb-4">
             <li className="flex items-center">
               <span className="text-green-400 mr-2">✓</span>
-              Mobile Legends uchun olmoslarni eng yaxshi narxlarda xarid qiling
+              {t("best_prices")}
             </li>
             <li className="flex items-center">
               <span className="text-green-400 mr-2">✓</span>
-              Har qanday mintaqaga tez yetkazib berish
+              {t("fast_delivery")}
             </li>
           </ul>
         </div>
@@ -187,7 +180,9 @@ export default function DiamondPackages() {
         <div className="space-y-8">
           {/* Standard Packages Section */}
           <div>
-            <h3 className="text-xl font-semibold mb-4">Standart paketlar</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              {t("standard_packages")}
+            </h3>
             <div className="space-y-4">
               {standardPackages.length > 0 &&
                 standardPackages.map((pkg, i) => {
@@ -203,12 +198,12 @@ export default function DiamondPackages() {
                         <div>
                           <div className="text-lg font-bold">{pkg.name}</div>
                           <div className="text-sm text-blue-300">
-                            ~{pkg.bonus} Bonus Diamonds
+                            ~{pkg.bonus} {t("bonus_diamonds")}
                           </div>
                         </div>
                         {standardQuantities[i] > 0 && (
                           <div className="text-right text-xs text-blue-400">
-                            Jami: {total}+{bonus}
+                            {t("total")}: {total}+{bonus}
                           </div>
                         )}
                       </div>
@@ -227,7 +222,7 @@ export default function DiamondPackages() {
                               handleChoose(pkg.id, "plus");
                             }}
                           >
-                            Tanlash
+                            {t("select")}
                           </button>
                         ) : (
                           <div className="flex items-center gap-2">
@@ -274,42 +269,20 @@ export default function DiamondPackages() {
 
           {/* Additional Packages Section */}
           <div>
-            <h3 className="text-xl font-semibold mb-4">Qo'shimcha paketlar</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              {t("additional_packages")}
+            </h3>
             <div className="bg-gray-800 p-5 rounded-xl mb-4">
               <div className="text-sm space-y-3">
-                <p>
-                  1. 01.01.2025 sanasidan boshlab (Server vaqti bo'yicha),
-                  Rejalashtirilgan To'ldirish (Recarga) menyusida ma'lum
-                  miqdordagi birinchi olmos xaridi (50, 150, 250 va 500 olmos)
-                  uchun olmos miqdori ikki baravar oshiriladi.
-                </p>
-                <p>2. Har bir darajadagi umumiy olingan olmos miqdori:</p>
+                <p>{t("additional_packages_info_1")}</p>
+                <p>{t("additional_packages_info_2")}</p>
                 <ul className="list-disc ml-5 space-y-2">
-                  <li>
-                    50 olmosli birinchi xarid:
-                    <br />
-                    50 asosiy olmos + 50 bonus olmos = 100 olmos umumiy
-                  </li>
-                  <li>
-                    150 olmosli birinchi xarid:
-                    <br />
-                    150 asosiy olmos + 150 bonus olmos = 300 olmos umumiy
-                  </li>
-                  <li>
-                    150 olmosli birinchi xarid:
-                    <br />
-                    250 asosiy olmos + 250 bonus olmos = 500 olmos umumiy
-                  </li>
-                  <li>
-                    500 olmosli birinchi xarid:
-                    <br />
-                    500 asosiy olmos + 500 bonus olmos = 1000 olmos umumiy
-                  </li>
+                  <li>{t("additional_packages_info_3")}</li>
+                  <li>{t("additional_packages_info_4")}</li>
+                  <li>{t("additional_packages_info_5")}</li>
+                  <li>{t("additional_packages_info_6")}</li>
                 </ul>
-                <p>
-                  3. Har bir daraja uchun, olmos bonuslari faqatgina ushbu
-                  darajadagi birinchi xaridga nisbatan amal qiladi!
-                </p>
+                <p>{t("additional_packages_info_7")}</p>
               </div>
             </div>
 
@@ -328,12 +301,12 @@ export default function DiamondPackages() {
                         <div>
                           <div className="text-lg font-bold">{pkg.name}</div>
                           <div className="text-sm text-blue-300">
-                            +{pkg.bonus} Bonus Diamonds
+                            +{pkg.bonus} {t("bonus_diamonds")}
                           </div>
                         </div>
                         {additionalQuantities[i] > 0 && (
                           <div className="text-right text-xs text-blue-400">
-                            Jami: {total}+{bonus}
+                            {t("total")}: {total}+{bonus}
                           </div>
                         )}
                       </div>
@@ -351,7 +324,7 @@ export default function DiamondPackages() {
                               handleChoose(pkg.id, "plus");
                             }}
                           >
-                            Select
+                            {t("select")}
                           </button>
                         ) : (
                           <div className="flex items-center gap-2">
@@ -400,7 +373,9 @@ export default function DiamondPackages() {
           {/* Special Packages Section */}
           {weekly && (
             <div>
-              <h3 className="text-xl font-semibold mb-4">Maxsus paketlar</h3>
+              <h3 className="text-xl font-semibold mb-4">
+                {t("special_packages")}
+              </h3>
               <div className="bg-gray-800 p-4 rounded-xl shadow hover:bg-gray-700 transition border border-gray-700">
                 <div className="flex justify-between items-start">
                   <div>
@@ -408,7 +383,7 @@ export default function DiamondPackages() {
                   </div>
                   {weeklyPassQuantityArray[0] > 0 && (
                     <div className="text-right text-xs text-blue-400">
-                      Jami: {weeklyPassQuantityArray[0] * 535}
+                      {t("total")}: {weeklyPassQuantityArray[0] * 535}
                     </div>
                   )}
                 </div>
@@ -425,7 +400,7 @@ export default function DiamondPackages() {
                         setWeeklyPassQuantityArray(q);
                       }}
                     >
-                      Select
+                      {t("select")}
                     </button>
                   ) : (
                     <div className="flex items-center gap-2">
@@ -469,16 +444,16 @@ export default function DiamondPackages() {
 
           {/* Payment Information Section */}
           <div>
-            <h3 className="text-xl font-semibold mb-4">To'lov ma'lumotlari</h3>
+            <h3 className="text-xl font-semibold mb-4">{t("payment_info")}</h3>
             <div className="bg-gray-800 p-5 rounded-xl shadow">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Oyinchi IDsi
+                    {t("username")}
                   </label>
                   <input
                     type="text"
-                    placeholder="123456789"
+                    placeholder={t("enter_your_username")}
                     className="w-full bg-gray-700 text-white p-2 rounded-lg border border-gray-600 focus:outline-none"
                     onChange={(e) => {
                       setUsername(e.target.value);
@@ -488,11 +463,11 @@ export default function DiamondPackages() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Server IDsi
+                    {t("server_id")}
                   </label>
                   <input
                     type="text"
-                    placeholder="1234"
+                    placeholder={t("enter_your_server_id")}
                     className="w-full bg-gray-700 text-white p-2 rounded-lg border border-gray-600 focus:outline-none"
                     onChange={(e) => {
                       setServerId(e.target.value);
@@ -504,20 +479,17 @@ export default function DiamondPackages() {
                 <p>{account}</p>
               </div>
               <p className="text-sm text-gray-300 mb-4">
-                Men mintaqaviy cheklovlar bilan tanishdim va tushundim, Rossiya
-                hisoblarida faqat "Rossiya" mintaqasi ishlaydi. Men kerakli
-                mintaqani tanlaganimni va qaytarish faqat sayt balansiga
-                mumkinligini tasdiqlayman (ru ❌).
+                {t("region_restrictions")}
               </p>
               <div className="flex justify-between items-center">
                 <div>
-                  <span className="text-sm">BALANS: </span>
+                  <span className="text-sm">{t("balance")}: </span>
                   <span className="text-yellow-300 font-semibold">
                     {userBalance && userBalance} 🪙
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">TOTAL: </span>
+                  <span className="text-sm">{t("total")}: </span>
                   <span className="text-yellow-300 font-semibold">
                     {total} 🪙
                   </span>
@@ -528,13 +500,16 @@ export default function DiamondPackages() {
                     rel="noopener noreferrer"
                     className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded-lg transition"
                   >
-                    Sotib Olish
+                    {t("buy_now")}
                   </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <h1>{t("purchase")}</h1>
       </div>
     </div>
   );
